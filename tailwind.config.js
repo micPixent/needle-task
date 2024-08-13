@@ -9,7 +9,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ["FuturaPT", ...defaultTheme.fontFamily.sans],
+                sans: ["FuturaPTDemi", ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 primary: {
