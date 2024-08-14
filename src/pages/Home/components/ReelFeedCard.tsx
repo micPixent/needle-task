@@ -8,13 +8,14 @@ import { useEffect, useState } from 'react'
 import { PlusCircleIcon } from '@heroicons/react/24/solid'
 import { classNames } from '../../../libs/classNameUtils'
 import useAuthContext from '../../../modules/Auth/useAuthContext'
-import { doc, setDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { db } from '../../../service/firebase'
 
 const ReelFeedCard = () => {
   const { user } = useAuthContext()
   const [breeds, setBreeds] = useState([])
   const [selectedBreeds, setSelectedBreeds] = useState<Array<string>>([])
+  const [favouritesBreeds, setFavouritesBreeds] = useState<Array<string>>([])
 
   useEffect(() => {
     const fetchBreeds = async () => {
@@ -33,6 +34,28 @@ const ReelFeedCard = () => {
     fetchBreeds()
   }, [])
 
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (!user) return // Do nothing if no user is authenticated
+
+      try {
+        // Reference to the user's document in Firestore
+        const userDocRef = doc(db, 'users', user.email)
+        const docSnap = await getDoc(userDocRef)
+
+        if (docSnap.exists()) {
+          setFavouritesBreeds(docSnap.data().favouriteBreeds || [])
+        } else {
+          console.log('No such document!')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchFavorites()
+  }, [user])
+
   const handleAddBreeds = (breed: string) => {
     const filteredRecord = [...selectedBreeds].find((item) => item === breed)
 
@@ -48,7 +71,6 @@ const ReelFeedCard = () => {
       return
     }
     try {
-      console.log(user.email, 'email')
       const userDocRef = doc(db, 'users', user.email)
 
       const data = {
@@ -76,7 +98,10 @@ const ReelFeedCard = () => {
           ?.map((breed, index) => (
             <Container key={index} className="mb-5">
               <Button
-                className={classNames('w-full flex')}
+                className={classNames(
+                  favouritesBreeds.includes(breed) && '!bg-primary-200',
+                  'w-full flex',
+                )}
                 mode="outline"
                 onClick={() => handleAddBreeds(breed)}
               >
