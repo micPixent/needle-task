@@ -20,6 +20,7 @@ const Login = () => {
     }
     try {
       await signInWithEmailAndPassword(auth, email, password)
+      window.location.replace('/')
     } catch (error) {
       console.log(error)
     }

@@ -20,6 +20,7 @@ const Register = () => {
     }
     try {
       await createUserWithEmailAndPassword(auth, email, password)
+      window.location.replace('/login')
     } catch (error) {
       console.log(error)
     }
