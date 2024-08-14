@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { SitemapRoutes } from './Sitemap'
-import Home from '../pages/Home'
+import Home from '../pages/Home/Home'
 
 const Router = () => {
   return (
