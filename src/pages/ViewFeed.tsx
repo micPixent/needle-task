@@ -2,7 +2,7 @@ import Text from '../components/Typography/Text'
 import BaseLayout from '../layout/BaseLayout'
 
 type ViewFeedProps = {
-  breed: string
+  breed?: string
 }
 
 const ViewFeed = ({ breed }: ViewFeedProps) => {
