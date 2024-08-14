@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import Button from '../components/Buttons'
 import Card from '../components/Card/Card'
 import Container from '../components/Container/Container'
@@ -7,6 +8,7 @@ import useAuthContext from '../modules/Auth/useAuthContext'
 
 const Home = () => {
   const { user } = useAuthContext()
+  const navigate = useNavigate()
   console.log(user)
 
   return (
@@ -15,7 +17,9 @@ const Home = () => {
         <Card className="p-10">
           <Container className="flex justify-between mb-4">
             <Title className="text-2xl">Welcome to Dog Show Reels</Title>
-            <Button className="w-32">Login Now</Button>
+            <Button className="w-32" onClick={() => navigate('/login')}>
+              Login Now
+            </Button>
           </Container>
           <Container className="flex justify-between">
             <Text className="mt-5 text-xl">
