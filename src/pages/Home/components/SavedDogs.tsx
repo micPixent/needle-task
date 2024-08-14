@@ -16,10 +16,11 @@ const SavedDogs = () => {
 
   useEffect(() => {
     const fetchFavorites = async () => {
-      if (!user) return // Do nothing if no user is authenticated
+      if (!user) return
 
       try {
-        // Reference to the user's document in Firestore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         const userDocRef = doc(db, 'users', user.email)
         const docSnap = await getDoc(userDocRef)
 
