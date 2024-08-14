@@ -1,6 +1,7 @@
 import { InputHTMLAttributes, ReactNode } from 'react'
 import TextInputConfig from './textInput.config'
 import { classNames } from '../../libs/classNameUtils'
+import { CheckCircleIcon } from '@heroicons/react/24/solid'
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   label?: string
@@ -100,9 +101,7 @@ export default function TextInput({
           autoCapitalize={autoCapitalize}
           {...rest}
         />
-        {withValidation && (
-          <img src="/assets/icons/green-tick-icon.svg" alt="" />
-        )}
+        {withValidation && <CheckCircleIcon className="w-3 h-3" />}
       </div>
     </div>
   )

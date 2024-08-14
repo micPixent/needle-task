@@ -27,12 +27,12 @@ export default function PasswordTextInput({
 
       {showPassword ? (
         <EyeIcon
-          className="absolute bottom-2 right-4 w-6 h-6 text-grey-200"
+          className="absolute bottom-4 right-4 w-6 h-6 text-grey-200"
           onClick={toggleShowPassword}
         />
       ) : (
         <EyeSlashIcon
-          className="absolute bottom-2 right-4 w-6 h-6 text-grey-200"
+          className="absolute bottom-4 right-4 w-6 h-6 text-grey-200"
           onClick={toggleShowPassword}
         />
       )}
