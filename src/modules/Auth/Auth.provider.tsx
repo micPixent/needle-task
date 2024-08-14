@@ -3,6 +3,7 @@ import { IAuthContext } from './type'
 import { onAuthStateChanged, User } from 'firebase/auth'
 import Loader from '../../components/Loader/Loader'
 import { auth } from '../../service/firebase'
+import { signOut } from 'firebase/auth'
 
 export const AuthContext = createContext<IAuthContext | null>(null)
 
@@ -14,8 +15,13 @@ export default function AuthProvider({ children }: Props) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user)
-      setIsAuthenticated(true)
+      if (!user) {
+        setIsAuthenticated(false)
+      }
+      if (user) {
+        setIsAuthenticated(true)
+        setUser(user)
+      }
       setIsLoading(false)
     })
 
@@ -30,8 +36,14 @@ export default function AuthProvider({ children }: Props) {
     setIsLoading(status)
   }
 
-  const logout = () => {
-    authorised(false)
+  const logout = async () => {
+    try {
+      await signOut(auth)
+      authorised(false)
+      setUser(null)
+    } catch (error) {
+      console.error('Error logging out: ', error)
+    }
   }
 
   return (
