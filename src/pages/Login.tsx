@@ -7,7 +7,7 @@ import TextInput from '../components/Forms/TextInput'
 import Title from '../components/Typography/Title'
 import BaseLayout from '../layout/BaseLayout'
 import { isValidEmail } from '../libs/validate'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../service/firebase'
 
 const Login = () => {
@@ -19,7 +19,7 @@ const Login = () => {
       return
     }
     try {
-      await createUserWithEmailAndPassword(auth, email, password)
+      await signInWithEmailAndPassword(auth, email, password)
     } catch (error) {
       console.log(error)
     }

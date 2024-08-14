@@ -7,9 +7,8 @@ import Title from '../components/Typography/Title'
 import useAuthContext from '../modules/Auth/useAuthContext'
 
 const Home = () => {
-  const { user } = useAuthContext()
+  const { isAuthenticated, logout } = useAuthContext()
   const navigate = useNavigate()
-  console.log(user)
 
   return (
     <Container>
@@ -17,15 +16,26 @@ const Home = () => {
         <Card className="p-10">
           <Container className="flex justify-between mb-4">
             <Title className="text-2xl">Welcome to Dog Show Reels</Title>
-            <Button className="w-32" onClick={() => navigate('/login')}>
-              Login Now
-            </Button>
+            {!isAuthenticated && (
+              <Button className="w-32" onClick={() => navigate('/login')}>
+                Login Now
+              </Button>
+            )}
+            {isAuthenticated && (
+              <Button className="w-32" onClick={logout}>
+                Logout
+              </Button>
+            )}
           </Container>
           <Container className="flex justify-between">
             <Text className="mt-5 text-xl">
               Enjoy our amazing dog photos that will make your day smile!
             </Text>
-            <Button className="w-32">Register</Button>
+            {!isAuthenticated && (
+              <Button className="w-32" onClick={() => navigate('/register')}>
+                Register
+              </Button>
+            )}
           </Container>
         </Card>
 
