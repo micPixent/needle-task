@@ -5,39 +5,30 @@ import Button from '../../../components/Buttons'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import useAuthContext from '../../../modules/Auth/useAuthContext'
-import { doc, getDoc } from 'firebase/firestore'
-import { db } from '../../../service/firebase'
 import Text from '../../../components/Typography/Text'
+import useServiceProvider from '../../../context/useServiceProvider'
 
 const SavedDogs = () => {
   const navigate = useNavigate()
   const { user } = useAuthContext()
   const [searchParams] = useSearchParams()
+  const { fetchFavorites } = useServiceProvider()
 
   const [favouritesBreeds, setFavouritesBreeds] = useState<Array<string>>([])
 
   useEffect(() => {
-    const fetchFavorites = async () => {
-      if (!user) return
+    getDogFavorites()
+  }, [user])
 
-      try {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const userDocRef = doc(db, 'users', user.email)
-        const docSnap = await getDoc(userDocRef)
-
-        if (docSnap.exists()) {
-          setFavouritesBreeds(docSnap.data().favouriteBreeds || [])
-        } else {
-          console.log('No such document!')
-        }
-      } catch (error) {
-        console.log(error)
-      }
+  const getDogFavorites = async () => {
+    if (!user) {
+      return
     }
 
-    fetchFavorites()
-  }, [user])
+    const response = await fetchFavorites()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setFavouritesBreeds(response as any)
+  }
 
   const onViewFeed = (favourites: string) => {
     searchParams.set('breed', favourites)
