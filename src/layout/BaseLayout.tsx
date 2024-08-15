@@ -24,9 +24,9 @@ const BaseLayout = ({
         {enableBackButton && (
           <Container className="mr-2">
             <Button mode="text" className="" onClick={() => navigate(-1)}>
-              <Container className="flex flex-row items-center text-primary-500 space-x-2">
-                <ChevronLeftIcon className="w-5 h-5" />
-                <Text className="text-primary-300">Back</Text>
+              <Container className="flex flex-row items-center text-white space-x-2">
+                <ChevronLeftIcon className="w-5 h-5 items-center" />
+                <Text className="text-white text-2xl">Back</Text>
               </Container>
             </Button>
           </Container>
