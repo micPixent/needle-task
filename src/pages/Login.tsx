@@ -9,8 +9,14 @@ import BaseLayout from '../layout/BaseLayout'
 import { isValidEmail } from '../libs/validate'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../service/firebase'
+import Modal from '../components/Modal/Modal'
+import { useOpenClose } from '../hooks/useOpenClose'
+import Text from '../components/Typography/Text'
+import { ExclamationCircleIcon } from '@heroicons/react/20/solid'
 
 const Login = () => {
+  const successRegisterModal = useOpenClose()
+  const errorRegisterModal = useOpenClose()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -20,9 +26,10 @@ const Login = () => {
     }
     try {
       await signInWithEmailAndPassword(auth, email, password)
+      successRegisterModal.open()
       window.location.replace('/')
-    } catch (error) {
-      console.log(error)
+    } catch {
+      errorRegisterModal.open()
     }
   }
 
@@ -57,6 +64,25 @@ const Login = () => {
           </div>
         </Card>
       </Container>
+      <Modal
+        show={successRegisterModal.isOpen}
+        onClose={successRegisterModal.close}
+      >
+        Success
+      </Modal>
+      <Modal
+        show={errorRegisterModal.isOpen}
+        onClose={errorRegisterModal.close}
+      >
+        <ExclamationCircleIcon className="w-32 h-32 mx-auto text-red-500 my-4" />
+        <Title className="text-center text-2xl">Login Failed</Title>
+        <Text className="text-center mt-5 font-semibold">
+          Please Try Again!
+        </Text>
+        <Button className="mt-10" onClick={errorRegisterModal.close}>
+          Close
+        </Button>
+      </Modal>
     </BaseLayout>
   )
 }
