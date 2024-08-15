@@ -3,59 +3,44 @@ import Container from '../../../components/Container/Container'
 import Title from '../../../components/Typography/Title'
 import Text from '../../../components/Typography/Text'
 import Button from '../../../components/Buttons'
-// import Image from '../../../components/Image/Image'
 import { useEffect, useState } from 'react'
 import { PlusCircleIcon } from '@heroicons/react/24/solid'
 import { classNames } from '../../../libs/classNameUtils'
 import useAuthContext from '../../../modules/Auth/useAuthContext'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
-import { db } from '../../../service/firebase'
+import useServiceProvider from '../../../context/useServiceProvider'
 
 const ReelFeedCard = () => {
   const { user } = useAuthContext()
+  const {
+    fetchDogBreeds,
+    fetchFavorites,
+    saveFavouriteBreed,
+  } = useServiceProvider()
+
   const [breeds, setBreeds] = useState([])
   const [selectedBreeds, setSelectedBreeds] = useState<Array<string>>([])
   const [favouritesBreeds, setFavouritesBreeds] = useState<Array<string>>([])
 
   useEffect(() => {
-    const fetchBreeds = async () => {
-      try {
-        const response = await fetch('https://dog.ceo/api/breeds/list/all')
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        const data = await response.json()
-        setBreeds(data.message)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
-    fetchBreeds()
+    getDogBreeds()
+    getDogFavorites()
   }, [])
 
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      if (!user) return
+  const getDogBreeds = async () => {
+    const response = await fetchDogBreeds()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setBreeds(response as any)
+  }
 
-      try {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const userDocRef = doc(db, 'users', user.email)
-        const docSnap = await getDoc(userDocRef)
-
-        if (docSnap.exists()) {
-          setFavouritesBreeds(docSnap.data().favouriteBreeds || [])
-        } else {
-          console.log('No such document!')
-        }
-      } catch (error) {
-        console.log(error)
-      }
+  const getDogFavorites = async () => {
+    if (!user) {
+      return
     }
 
-    fetchFavorites()
-  }, [user])
+    const response = await fetchFavorites()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setFavouritesBreeds(response as any)
+  }
 
   const handleAddBreeds = (breed: string) => {
     const filteredRecord = [...selectedBreeds].find((item) => item === breed)
@@ -71,21 +56,8 @@ const ReelFeedCard = () => {
     if (!user) {
       return
     }
-    try {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const userDocRef = doc(db, 'users', user.email)
-
-      const data = {
-        userEmail: user.email,
-        favouriteBreeds: selectedBreeds,
-      }
-
-      await setDoc(userDocRef, data)
-
-      console.log('Data saved successfully')
-    } catch (error) {
-      console.log(error)
+    if (user.email) {
+      await saveFavouriteBreed(user?.email, selectedBreeds)
     }
   }
 
