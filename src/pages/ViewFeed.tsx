@@ -9,9 +9,13 @@ import Image from '../components/Image/Image'
 import { HeartIcon } from '@heroicons/react/16/solid'
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'
 import { useEffect, useState } from 'react'
+import { db } from '../service/firebase'
+import useAuthContext from '../modules/Auth/useAuthContext'
+import { arrayUnion, doc, updateDoc } from 'firebase/firestore'
 
 const ViewFeed = () => {
   const navigate = useNavigate()
+  const { user } = useAuthContext()
   const [searchParams] = useSearchParams()
   const breedType = searchParams.get('breed')
 
@@ -48,6 +52,21 @@ const ViewFeed = () => {
     }
   }, [])
 
+  const onLikeDogBreed = async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const userDocRef = doc(db, 'users', user?.email)
+
+    try {
+      await updateDoc(userDocRef, {
+        isLiked: arrayUnion(breedType),
+      })
+      console.log('Document updated successfully!')
+    } catch (error) {
+      console.error('Error updating document: ', error)
+    }
+  }
+
   return (
     <BaseLayout>
       <Container className="flex justify-center">
@@ -64,7 +83,11 @@ const ViewFeed = () => {
                 <ChevronLeftIcon className="w-5 h-5 my-auto ml-3" />
                 <Text>Back</Text>
               </Button>
-              <Button className="!w-1/6 flex justify-center" mode="outline">
+              <Button
+                className="!w-1/6 flex justify-center"
+                mode="outline"
+                onClick={onLikeDogBreed}
+              >
                 <Text>Like</Text>
                 <HeartIcon className="w-5 h-5 my-auto " />
               </Button>
