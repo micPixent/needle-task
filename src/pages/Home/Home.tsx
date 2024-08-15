@@ -23,13 +23,13 @@ const Home = () => {
             {!isAuthenticated && (
               <>
                 <Title className="text-2xl">Welcome to Dog Show Reels</Title>
-                <Button className="w-32" onClick={() => navigate('/login')}>
+                <Button className="!w-1/6" onClick={() => navigate('/login')}>
                   Login Now
                 </Button>
               </>
             )}
             {isAuthenticated && (
-              <Button className="w-32" onClick={logout}>
+              <Button className="!w-1/6" onClick={logout}>
                 Logout
               </Button>
             )}
@@ -39,7 +39,7 @@ const Home = () => {
               Enjoy our amazing dog photos that will make your day smile!
             </Text>
             {!isAuthenticated && (
-              <Button className="w-32" onClick={() => navigate('/register')}>
+              <Button className="!w-1/6" onClick={() => navigate('/register')}>
                 Register
               </Button>
             )}
