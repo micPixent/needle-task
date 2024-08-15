@@ -71,6 +71,11 @@ const ReelFeedCard = () => {
     }
   }
 
+  const handleOnSuccessSaveBreed = () => {
+    successSaveBreedModal.close()
+    location.reload()
+  }
+
   return (
     <>
       <Card className="p-10 mt-10 basis-3/4">
@@ -112,7 +117,7 @@ const ReelFeedCard = () => {
           Updated Your Favourite List Dog Breeds
         </Title>
 
-        <Button className="mt-10" onClick={successSaveBreedModal.close}>
+        <Button className="mt-10" onClick={handleOnSuccessSaveBreed}>
           Close
         </Button>
       </Modal>
