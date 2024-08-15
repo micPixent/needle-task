@@ -15,8 +15,8 @@ import Text from '../components/Typography/Text'
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid'
 
 const Login = () => {
-  const successRegisterModal = useOpenClose()
-  const errorRegisterModal = useOpenClose()
+  const successLoginModal = useOpenClose()
+  const errorLoginModal = useOpenClose()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -26,10 +26,10 @@ const Login = () => {
     }
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      successRegisterModal.open()
+      successLoginModal.open()
       window.location.replace('/')
     } catch {
-      errorRegisterModal.open()
+      errorLoginModal.open()
     }
   }
 
@@ -64,22 +64,16 @@ const Login = () => {
           </div>
         </Card>
       </Container>
-      <Modal
-        show={successRegisterModal.isOpen}
-        onClose={successRegisterModal.close}
-      >
+      <Modal show={successLoginModal.isOpen} onClose={successLoginModal.close}>
         Success
       </Modal>
-      <Modal
-        show={errorRegisterModal.isOpen}
-        onClose={errorRegisterModal.close}
-      >
+      <Modal show={errorLoginModal.isOpen} onClose={errorLoginModal.close}>
         <ExclamationCircleIcon className="w-32 h-32 mx-auto text-red-500 my-4" />
         <Title className="text-center text-2xl">Login Failed</Title>
         <Text className="text-center mt-5 font-semibold">
           Please Try Again!
         </Text>
-        <Button className="mt-10" onClick={errorRegisterModal.close}>
+        <Button className="mt-10" onClick={errorLoginModal.close}>
           Close
         </Button>
       </Modal>
