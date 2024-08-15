@@ -76,7 +76,7 @@ const ReelFeedCard = () => {
             <Container key={index} className="mb-5">
               <Button
                 className={classNames(
-                  favouritesBreeds.includes(breed) && '!bg-primary-200',
+                  favouritesBreeds?.includes(breed) && '!bg-primary-200',
                   'w-full flex',
                 )}
                 mode="outline"
