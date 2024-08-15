@@ -8,7 +8,7 @@ import Title from '../components/Typography/Title'
 import BaseLayout from '../layout/BaseLayout'
 import { isValidEmail } from '../libs/validate'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../service/firebase'
+import { auth, db } from '../service/firebase'
 import Modal from '../components/Modal/Modal'
 import { useOpenClose } from '../hooks/useOpenClose'
 import {
@@ -17,6 +17,7 @@ import {
 } from '@heroicons/react/16/solid'
 import Text from '../components/Typography/Text'
 import { useNavigate } from 'react-router-dom'
+import { doc, setDoc } from 'firebase/firestore'
 
 const Register = () => {
   const successRegisterModal = useOpenClose()
@@ -32,6 +33,14 @@ const Register = () => {
     }
     try {
       await createUserWithEmailAndPassword(auth, email, password)
+
+      const userDocRef = doc(db, 'users', email)
+      const data = {
+        userEmail: email,
+        favouriteBreeds: [],
+      }
+
+      await setDoc(userDocRef, data)
       successRegisterModal.open()
     } catch {
       errorRegisterModal.open()
@@ -46,7 +55,6 @@ const Register = () => {
 
   const handleOnSuccessRegister = () => {
     successRegisterModal.close()
-    console.log('fk')
     navigate('/')
   }
 

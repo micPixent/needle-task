@@ -37,25 +37,27 @@ const SavedDogs = () => {
   }
 
   return (
-    <Card className="p-10 mt-10 basis-1/2">
-      <Container className="flex justify-between mb-4">
-        <Title className="text-2xl">My Favourite Breeds</Title>
-      </Container>
-
-      {favouritesBreeds?.map((favourites, index) => (
-        <Container className="flex justify-between mb-5 items-center">
-          <Text key={index} className="uppercase">
-            {index + 1}. {favourites}
-          </Text>
-          <Button
-            className="w-1/6 sm:w-2/6 !p-1"
-            onClick={() => onViewFeed(favourites)}
-          >
-            View Feed
-          </Button>
+    <>
+      <Card className="p-10 mt-10 basis-1/2">
+        <Container className="flex justify-between mb-4">
+          <Title className="text-2xl">My Favourite Breeds</Title>
         </Container>
-      ))}
-    </Card>
+
+        {favouritesBreeds?.map((favourites, index) => (
+          <Container className="flex justify-between mb-5 items-center">
+            <Text key={index} className="uppercase">
+              {index + 1}. {favourites}
+            </Text>
+            <Button
+              className="w-1/6 sm:w-2/6 !p-1"
+              onClick={() => onViewFeed(favourites)}
+            >
+              View Feed
+            </Button>
+          </Container>
+        ))}
+      </Card>
+    </>
   )
 }
 

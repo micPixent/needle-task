@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Text from '../components/Typography/Text'
 import BaseLayout from '../layout/BaseLayout'
@@ -7,63 +9,40 @@ import Container from '../components/Container/Container'
 import Button from '../components/Buttons'
 import Image from '../components/Image/Image'
 import { HeartIcon } from '@heroicons/react/16/solid'
-import { ChevronLeftIcon } from '@heroicons/react/24/solid'
+import { CheckBadgeIcon, ChevronLeftIcon } from '@heroicons/react/24/solid'
 import { useEffect, useState } from 'react'
-import { db } from '../service/firebase'
 import useAuthContext from '../modules/Auth/useAuthContext'
-import { arrayUnion, doc, updateDoc } from 'firebase/firestore'
+import useServiceProvider from '../context/useServiceProvider'
+import Modal from '../components/Modal/Modal'
+import { useOpenClose } from '../hooks/useOpenClose'
+import { classNames } from '../libs/classNameUtils'
 
 const ViewFeed = () => {
   const navigate = useNavigate()
   const { user } = useAuthContext()
+  const { fetchRandomDogImage, saveOnLikedDogBreed } = useServiceProvider()
+  const successOnLikeDogBreeddModal = useOpenClose()
+
   const [searchParams] = useSearchParams()
   const breedType = searchParams.get('breed')
 
   const [imageUrl, setImageUrl] = useState('')
 
   useEffect(() => {
-    let isFetched = false
-
-    const fetchDogImage = async () => {
-      try {
-        const response = await fetch('https://dog.ceo/api/breeds/image/random')
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-
-        const data = await response.json()
-        if (!isFetched) {
-          setImageUrl(data.message)
-        }
-      } catch (error) {
-        if (!isFetched) {
-          console.log(
-            error,
-            'Error fetching the image. Please try again later.',
-          )
-        }
-      }
-    }
-
-    fetchDogImage()
-
-    return () => {
-      isFetched = true
-    }
+    getDogImage()
   }, [])
 
-  const onLikeDogBreed = async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const userDocRef = doc(db, 'users', user?.email)
+  const getDogImage = async () => {
+    const response = await fetchRandomDogImage()
+    setImageUrl(response as any)
+  }
 
-    try {
-      await updateDoc(userDocRef, {
-        isLiked: arrayUnion(breedType),
-      })
-      console.log('Document updated successfully!')
-    } catch (error) {
-      console.error('Error updating document: ', error)
+  const onLikeDogBreed = async () => {
+    // @ts-ignore
+    const response = await saveOnLikedDogBreed(user?.email, breedType)
+    // @ts-ignore
+    if (response.message) {
+      successOnLikeDogBreeddModal.open()
     }
   }
 
@@ -80,11 +59,11 @@ const ViewFeed = () => {
             <Image src={imageUrl} className="rounded-xl mx-auto" />
             <div className="mx-auto space-x-5 mt-5 flex justify-around">
               <Button className="!w-1/6 flex" onClick={() => navigate(-1)}>
-                <ChevronLeftIcon className="w-5 h-5 my-auto ml-3" />
+                <ChevronLeftIcon className="w-8 h-8 my-auto !text-black " />
                 <Text>Back</Text>
               </Button>
               <Button
-                className="!w-1/6 flex justify-center"
+                className={classNames('!w-1/6 flex justify-center')}
                 mode="outline"
                 onClick={onLikeDogBreed}
               >
@@ -94,6 +73,17 @@ const ViewFeed = () => {
             </div>
           </Container>
         </Card>
+        <Modal
+          show={successOnLikeDogBreeddModal.isOpen}
+          onClose={successOnLikeDogBreeddModal.close}
+        >
+          <CheckBadgeIcon className="w-32 h-32 mx-auto text-green-500 my-4" />
+          <Title className="text-center text-2xl">You liked this!</Title>
+
+          <Button className="mt-10" onClick={successOnLikeDogBreeddModal.close}>
+            Close
+          </Button>
+        </Modal>
       </Container>
     </BaseLayout>
   )
