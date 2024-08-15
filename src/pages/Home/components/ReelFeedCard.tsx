@@ -67,6 +67,7 @@ const ReelFeedCard = () => {
     }
     if (user.email) {
       await saveFavouriteBreed(user?.email, selectedBreeds)
+      successSaveBreedModal.open()
     }
   }
 
