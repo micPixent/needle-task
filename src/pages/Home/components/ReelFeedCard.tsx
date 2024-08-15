@@ -37,9 +37,11 @@ const ReelFeedCard = () => {
       return
     }
 
-    const response = await fetchFavorites()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setFavouritesBreeds(response as any)
+    if (user.email) {
+      const response = await fetchFavorites(user.email)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setFavouritesBreeds(response as any)
+    }
   }
 
   const handleAddBreeds = (breed: string) => {

@@ -4,7 +4,7 @@ import { db } from '../service/firebase'
 
 interface IServiceContext {
   fetchDogBreeds: () => void
-  fetchFavorites: () => void
+  fetchFavorites: (userEmail: string) => void
   saveFavouriteBreed: (
     userEmail: string,
     favouriteBreeds: Array<string>,
@@ -28,11 +28,11 @@ const ServiceProvider = ({ children }: Props) => {
     }
   }
 
-  const fetchFavorites = async () => {
+  const fetchFavorites = async (userEmail: string) => {
     try {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const userDocRef = doc(db, 'users', user.email)
+      const userDocRef = doc(db, 'users', userEmail)
       const docSnap = await getDoc(userDocRef)
 
       if (docSnap.exists()) {
